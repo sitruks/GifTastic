@@ -27,11 +27,10 @@
                     <p class="title"></p>
                     <div class="row">
                         <div class="nes-field">
-                            <form>
-                                <label for="name_field">Add Another GIF</label>
-                                <input type="text" id="name_field" class="nes-input" placeholder="John Snow" value="">
-                                <input type="button" id="newButton" class="nes-btn" value="submit"
-                                    onclick="userName()" />
+                            <form onsubmit="getGif()">
+                                <label for="nameField">Add Another GIF</label>
+                                <input type="text" id="nameField" class="nes-input" value="John Snow">
+                                <input type="button" id="newButton" class="nes-btn" value="Submit" />
                             </form>
                         </div>
                     </div>
@@ -41,7 +40,9 @@
                 <p class="title">GIF Display</p>
                 <div class="">
                     <div class="row-bottom">
-                        <div id="resultsImage"></div>
+                        <div class="col-6">
+                            <div id="resultsImage"></div>
+                        </div>
                     </div>
                 </div>
             </div>
