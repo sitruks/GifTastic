@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GIF-tastic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/reset.css">
+    <link href="https://unpkg.com/nes.css@latest/css/nes.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+</head>
+
+<body>
+    <div class="nes-container with-title is-dark">
+        <p class="title">Check out the GIFS!!!</p>
+        <div id="gameMenu">
+            <div id="gameGifBankBox" class="nes-container with-title is-dark">
+                <p class="title">GIF Bank</p>
+                <div class="row">
+                    <div id="resultsButton"></div>
+                </div>
+            </div>
+            <div id="gameWelcome" class="nes-container with-title is-dark">
+                <div class="">
+                    <p class="title"></p>
+                    <div class="row">
+                        <div class="nes-field">
+                            <form>
+                                <label for="name_field">Add Another GIF</label>
+                                <input type="text" id="name_field" class="nes-input" placeholder="John Snow" value="">
+                                <input type="button" id="newButton" class="nes-btn" value="submit"
+                                    onclick="userName()" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="gameGifBox" class="nes-container with-title is-dark">
+                <p class="title">GIF Display</p>
+                <div class="">
+                    <div class="row-bottom">
+                        <div id="resultsImage"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>
