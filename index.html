@@ -18,8 +18,8 @@
         <div id="gameMenu">
             <div id="gameGifBankBox" class="nes-container with-title is-dark">
                 <p class="title">GIF Bank</p>
-                <div class="row-bottom">
-                    <div id="resultsButton" class="col-3"></div>
+                <div class="list-group list-group-horizontal">
+                    <ul id="resultsButton"></ul>
                 </div>
             </div>
             <div id="gameWelcome" class="nes-container with-title is-dark">
@@ -27,10 +27,10 @@
                     <p class="title"></p>
                     <div class="row">
                         <div class="nes-field">
-                            <form onsubmit="makeGif()">
-                                <label for="nameField">Add Another GIF</label>
-                                <input type="text" id="nameField" class="nes-input" value="John Snow">
-                                <input type="button" id="newButton" class="nes-btn" value="Submit" />
+                            <form>
+                                <label for="newGifText">Add Another GIF</label>
+                                <input type="text" id="newGifText" class="nes-input" placeholder="John Snow" value="John Snow">
+                                <input type="submit" id="newGifButton" class="nes-btn" value="Submit" />
                             </form>
                         </div>
                     </div>
