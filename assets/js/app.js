@@ -1,3 +1,5 @@
+// ////
+// GLOBAL VARIABLES
 var gifs =
 {
     queue:
@@ -13,7 +15,12 @@ var gifs =
 };
 localStorage.setItem('gifs', JSON.stringify(gifs));
 var itemCount = 0;
+var displayed = [];
+var restoredGifs = JSON.parse(localStorage.getItem('gifs'));
+console.log(restoredGifs);
+var outputs = "";
 
+// CREATE A NEW BUTTON WITH USER INPUT
 $("#newGifButton").on("click", function (event) {
     // PREVENT FORM FROM SUBMITTING
     event.preventDefault();
@@ -22,15 +29,11 @@ $("#newGifButton").on("click", function (event) {
     itemCount++;
 });
 
-
-var restoredGifs = JSON.parse(localStorage.getItem('gifs'));
-console.log(restoredGifs);
-var outputs = "";
+// TEMPLATE FUNCTION TO CREATE BUTTON FOR DISPLAY/CALLING GIFS
 function createItem(itemNumber, newGifTextInput) {
     var gifButton;
     var itemId = "item-" + itemNumber;
-    // var gifContent = $('<li class="list-group-item">').attr("id", itemId).text(newGifTextInput);
-    var gifContent = $(`<li id="${itemId}" class="list-group-item"><input type="button" id="gifCallButton" class="nes-btn" 
+    var gifContent = $(`<li id="${itemId}" class="list-group-item"><input type="button" class="gifCallButton nes-btn" 
     value="${newGifTextInput}"/></div></li>`);
     localStorage.setItem(itemId, newGifTextInput);
     var removeGif = $("<button>", {
@@ -38,59 +41,96 @@ function createItem(itemNumber, newGifTextInput) {
         class: "checkbox",
         text: 'X'
     });
-
-    // Append the button to the to do item
+    // PREPEND THE removeGif BUTTON TO THE GIF VALUE
     gifButton = gifContent.prepend(removeGif);
-
     $('#resultsButton').append(gifButton);
-
-    // Clear the textbox when done
+    // CLEAR THE TEXTBOX WHEN DONE
     $('#newGifText').val("");
 };
 
+// TEMPLATE FUNCTION TO CREATE CARD TO DISPLAY GIFS
+function buildCard(obj) {
+    // CREATE TITLE DIV
+    var divTitle = $("<div>");
+    divTitle.text(obj.title.toUpperCase());
+    // CREATE THE RATING DIV
+    var divRating = $("<div>");
+    divRating.text("Rating: " + obj.rating.toUpperCase());
+    // CREATE THE IMAGE TAG
+    var elem = $("<img>");
+    elem.attr("src", obj.still);
+    elem.attr("data-still", obj.still);
+    elem.attr("data-animate", obj.animated);
+    elem.attr("data-state", "still");
+    // CREATE THE CARD
+    var divCardHolder = $("<div>");
+    divCardHolder.attr("data-id", obj.id)
+    divTitle.appendTo(divCardHolder);
+    elem.appendTo(divCardHolder);
+    divRating.appendTo(divCardHolder);
+    return divCardHolder;
+};
+
+// REMOVE BUTTON FROM VIEW, PERSISTS IN TEMP DATABASE
 $(document.body).on("click", ".checkbox", function () {
     var itemId = $(this).attr("gifToRemove");
     console.log(itemId);
     $('#item-' + itemId).empty();
 });
 
+// 10 GIF, CUSTOM CALL BUTTON
+$(document.body).on("click", ".gifCallButton", function () {
+    var magic;
+    //// CALL AND POPULATE GIF
+    magic = $(this).val();
+    console.log(magic);
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + magic + "&limit=10&rating=pg&offset=&api_key=zGfrjOHn6S3dvmRKo9mb00sGQ729qbEd";
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    })
+        .then(function (response) {
+            for (var i = 0; i < 10; i++) {
+                // ESTABLISH VARIABLE FOR RETURNED OBJECT
+                var obj = response.data[i];
+                // CREATE A CARD FOR GIF OUTPUT WITH ALL PERTINENT STATS
+                var cardObj = {
+                    id: obj.id,
+                    title: obj.title,
+                    rating: obj.rating,
+                    still: obj.images.original_still.url,
+                    animated: obj.images.original.url,
+                }
+                // ADD THE OBJECT TO THE ARRAY [displayed]
+                displayed.push(cardObj);
+                // BUILD THE CARD
+                var card = buildCard(cardObj);
+                card.appendTo(".resultsImage");
+            }
+        });
+
+});
+
+// ADD IN PLAY/PAUSE FUCNTIONALITY TO CALLED GIFS
+$(".resultsImage").on("click", function () {
+    var state = $(this).attr('data-state');
+    // LOGIC TO ESTABLISH GIF ANIMATION UPON CLICK FROM BASE STATE OF STILL
+    if (state === 'still') {
+        $(this).attr('src', $(this).attr('data-animate'));
+        $(this).attr('data-state', 'animate')
+      } else {
+        $(this).attr('src', $(this).attr('data-still'));
+        $(this).attr('data-state', 'still')
+      }
+});
+
+// BUTTONS TO LOAD BASED ON VARIABLES IN LOCAL STORAGE
 $(document).ready(function () {
 
     for (var i = 0; i < restoredGifs.queue.length; i++) {
-        var gifName = restoredGifs.queue[i].name
-        console.log(gifName)
-        // var newGifTextInput = $(gifName).val();
+        var gifName = restoredGifs.queue[i].name;
+        console.log(gifName);
         createItem(itemCount, gifName);
         itemCount++;
-    }
+    };
 });
-
-// $('#gifCallButton').on('click', function (event) {
-//     // BEST PRACTICE TO PREVENT FORM FROM SUBMITTING
-//     event.preventDefault();
-//     //// CALL AND POPULATE GIF
-//     function getGif() {
-//         // GET
-//         var magic;
-//         console.log(magic);
-//         magic = $('#gifCallButton').val();
-//         //SET
-//         $('#gifCallButton').val(magic);
-//         console.log(magic);
-//         var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=zGfrjOHn6S3dvmRKo9mb00sGQ729qbEd&tag=" + magic + "";
-//         $.ajax({
-//             url: queryURL,
-//             method: "GET"
-//         })
-//             .then(function (response) {
-//                 console.log(response);
-//                 var imageUrl = response.data.image_original_url;
-//                 var magicImage = $("<img>");
-//                 magicImage.attr("src", imageUrl);
-//                 magicImage.attr("alt", "magic image");
-//                 $("#resultsImage").prepend(magicImage);
-//             });
-//     };
-//     getGif();
-
-// });
