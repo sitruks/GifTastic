@@ -38,12 +38,12 @@ h2 {
     height: 200px;
 }
 
-/* #gameGifBankBox {
-    height: 150px;
-} */
+#gameGifBankBox {
+    min-height: 100px;
+}
 
 #gameGifBox {
-    height: 500px;
+    min-height: 500px;
 }
 
 div.nes-container.with-title.is-dark {
@@ -55,6 +55,14 @@ div.row.nes-container.is-rounded.is-dark {
     padding: 1em;
 }
 
+div.gifOutput.nes-container.is-rounded {
+    max-width: 250px;
+    max-height: 200px;
+    display: inline-flex;
+    flex-direction: column;
+    font-size: 8px;
+    background-color: #cc8b41;
+}
 
 /* IMAGE SIZING */
 
@@ -65,24 +73,23 @@ div.row.nes-container.is-rounded.is-dark {
 
 /* BUTTON FORMATTING */
 
-.list-group-horizontal .list-group-item
-{
+.list-group-horizontal .list-group-item {
 	display: inline-block;
 }
-.list-group-horizontal .list-group-item
-{
+
+.list-group-horizontal .list-group-item {
 	margin-bottom: 0;
 	margin-left:-4px;
 	margin-right: 0;
  	border-right-width: 0;
 }
-.list-group-horizontal .list-group-item:first-child
-{
+
+.list-group-horizontal .list-group-item:first-child {
 	border-top-right-radius:0;
 	border-bottom-left-radius:4px;
 }
-.list-group-horizontal .list-group-item:last-child
-{
+
+.list-group-horizontal .list-group-item:last-child {
 	border-top-right-radius:4px;
 	border-bottom-left-radius:0;
 	border-right-width: 1px;

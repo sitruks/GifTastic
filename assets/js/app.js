@@ -63,7 +63,7 @@ function buildCard(obj) {
     elem.attr("data-animate", obj.animated);
     elem.attr("data-state", "still");
     // CREATE THE CARD
-    var divCardHolder = $("<div>");
+    var divCardHolder = $(`<div class="gifOutput nes-container is-rounded">`);
     divCardHolder.attr("data-id", obj.id)
     divTitle.appendTo(divCardHolder);
     elem.appendTo(divCardHolder);
@@ -111,19 +111,6 @@ $(document.body).on("click", ".gifCallButton", function () {
 
 });
 
-// ADD IN PLAY/PAUSE FUCNTIONALITY TO CALLED GIFS
-$(".resultsImage").on("click", function () {
-    var state = $(this).attr('data-state');
-    // LOGIC TO ESTABLISH GIF ANIMATION UPON CLICK FROM BASE STATE OF STILL
-    if (state === 'still') {
-        $(this).attr('src', $(this).attr('data-animate'));
-        $(this).attr('data-state', 'animate')
-      } else {
-        $(this).attr('src', $(this).attr('data-still'));
-        $(this).attr('data-state', 'still')
-      }
-});
-
 // BUTTONS TO LOAD BASED ON VARIABLES IN LOCAL STORAGE
 $(document).ready(function () {
 
@@ -133,4 +120,18 @@ $(document).ready(function () {
         createItem(itemCount, gifName);
         itemCount++;
     };
+});
+
+
+// ADD IN PLAY/PAUSE FUCNTIONALITY TO CALLED GIFS
+$('.gifOutput').on('click', function () {
+    var state = $(this).attr('data-state');
+    // LOGIC TO ESTABLISH GIF ANIMATION UPON CLICK FROM BASE STATE OF STILL
+    if (state === 'still') {
+        $(this).attr('src', $(this).attr('data-animate'));
+        $(this).attr('data-state', 'animate')
+      } else {
+        $(this).attr('src', $(this).attr('data-still'));
+        $(this).attr('data-state', 'still')
+      }
 });
