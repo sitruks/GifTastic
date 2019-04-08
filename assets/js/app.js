@@ -9,8 +9,7 @@ var gifs =
             { id: 2, name: "Porky Pig" },
             { id: 3, name: "Marvin the Martian" },
             { id: 4, name: "Foghorn Leghorn" },
-            { id: 5, name: "Wile E Coyote" },
-            { id: 6, name: "The Roadrunner" }
+            { id: 5, name: "Wile E Coyote" }
         ]
 };
 localStorage.setItem('gifs', JSON.stringify(gifs));
@@ -20,6 +19,9 @@ var restoredGifs = JSON.parse(localStorage.getItem('gifs'));
 console.log(restoredGifs);
 var outputs = "";
 
+
+
+
 // CREATE A NEW BUTTON WITH USER INPUT
 $("#newGifButton").on("click", function (event) {
     // PREVENT FORM FROM SUBMITTING
@@ -27,6 +29,31 @@ $("#newGifButton").on("click", function (event) {
     var newGifTextInput = $('#newGifText').val();
     createItem(itemCount, newGifTextInput);
     itemCount++;
+});
+
+// ADD IN PLAY/PAUSE FUCNTIONALITY TO CALLED GIFS
+$(document.body).on("click", ".gif", function () {
+    var state = $(this).attr("data-state");
+    // LOGIC TO ESTABLISH GIF ANIMATION UPON CLICK FROM BASE STATE OF STILL
+    if (state === 'still') {
+        $(this).attr('src', $(this).attr('data-animate'));
+        $(this).attr('data-state', 'animate')
+      } else {
+        $(this).attr('src', $(this).attr('data-still'));
+        $(this).attr('data-state', 'still')
+      }
+});
+
+// REMOVE BUTTON FROM VIEW, PERSISTS IN TEMP DATABASE
+$(document.body).on("click", ".checkbox", function () {
+    var itemId = $(this).attr("gifToRemove");
+    console.log(itemId);
+    $('#item-' + itemId).empty();
+});
+
+// CLEAR GIFS FROM VIEW,
+$(document.body).on("click", "#clearGifButton", function () {
+    $(".resultsImage").empty();
 });
 
 // TEMPLATE FUNCTION TO CREATE BUTTON FOR DISPLAY/CALLING GIFS
@@ -57,26 +84,20 @@ function buildCard(obj) {
     var divRating = $("<div>");
     divRating.text("Rating: " + obj.rating.toUpperCase());
     // CREATE THE IMAGE TAG
-    var elem = $("<img>");
+    var elem = $(`<img>`);
     elem.attr("src", obj.still);
     elem.attr("data-still", obj.still);
     elem.attr("data-animate", obj.animated);
     elem.attr("data-state", "still");
+    elem.attr("class", "gif");
     // CREATE THE CARD
-    var divCardHolder = $(`<div class="gifOutput nes-container is-rounded">`);
+    var divCardHolder = $(`<div class="nes-container is-rounded">`);
     divCardHolder.attr("data-id", obj.id)
     divTitle.appendTo(divCardHolder);
     elem.appendTo(divCardHolder);
     divRating.appendTo(divCardHolder);
     return divCardHolder;
 };
-
-// REMOVE BUTTON FROM VIEW, PERSISTS IN TEMP DATABASE
-$(document.body).on("click", ".checkbox", function () {
-    var itemId = $(this).attr("gifToRemove");
-    console.log(itemId);
-    $('#item-' + itemId).empty();
-});
 
 // 10 GIF, CUSTOM CALL BUTTON
 $(document.body).on("click", ".gifCallButton", function () {
@@ -90,6 +111,7 @@ $(document.body).on("click", ".gifCallButton", function () {
         method: "GET"
     })
         .then(function (response) {
+            console.log(response);
             for (var i = 0; i < 10; i++) {
                 // ESTABLISH VARIABLE FOR RETURNED OBJECT
                 var obj = response.data[i];
@@ -98,14 +120,14 @@ $(document.body).on("click", ".gifCallButton", function () {
                     id: obj.id,
                     title: obj.title,
                     rating: obj.rating,
-                    still: obj.images.original_still.url,
-                    animated: obj.images.original.url,
+                    still: obj.images.fixed_height_small_still.url,
+                    animated: obj.images.fixed_height_small.url,
                 }
                 // ADD THE OBJECT TO THE ARRAY [displayed]
                 displayed.push(cardObj);
                 // BUILD THE CARD
                 var card = buildCard(cardObj);
-                card.appendTo(".resultsImage");
+                $(".resultsImage").prepend(card);
             }
         });
 
@@ -120,18 +142,4 @@ $(document).ready(function () {
         createItem(itemCount, gifName);
         itemCount++;
     };
-});
-
-
-// ADD IN PLAY/PAUSE FUCNTIONALITY TO CALLED GIFS
-$('.gifOutput').on('click', function () {
-    var state = $(this).attr('data-state');
-    // LOGIC TO ESTABLISH GIF ANIMATION UPON CLICK FROM BASE STATE OF STILL
-    if (state === 'still') {
-        $(this).attr('src', $(this).attr('data-animate'));
-        $(this).attr('data-state', 'animate')
-      } else {
-        $(this).attr('src', $(this).attr('data-still'));
-        $(this).attr('data-state', 'still')
-      }
 });
